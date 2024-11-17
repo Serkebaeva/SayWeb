@@ -1,12 +1,14 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
+    margin-top: 30px;
     text-align: center;
 }
 
 .container {
     max-width: 300px;
     margin: auto;
+    margin-top: 15px;
 }
 
 h2 {
@@ -14,6 +16,7 @@ h2 {
     color: black;
     margin-top: 15px;
     margin-bottom: 10px;
+    
 }
 
 form{
@@ -22,9 +25,10 @@ form{
     align-items: center;
 }
 
-input[type="number"] {
+input[type="text"] {
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 3px;
+    margin-top: 15px;
     height: 25px;
     font-size: 16px;
     background-color: #eaeaea;
@@ -37,7 +41,7 @@ button {
     height: 50px;
     width: 72%;
     padding: 10px;
-    margin-top: 15px;
+    margin-top: 5px;
     border: none;
     border-radius: 15px;
     font-size: 16px;

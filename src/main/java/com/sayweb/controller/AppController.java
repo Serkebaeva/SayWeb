@@ -20,11 +20,28 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RestController
 public class AppController {
+
   @GetMapping("/convert-to-words-and-audio")
   public ResponseEntity<Map<String, String>> convertToWordsAndAudio(
-      @RequestParam("number") Long number) {
+      @RequestParam("number") String numberInput) {
     Map<String, String> response = new HashMap<>();
+
     try {
+      // Check if the input is a valid number
+      Long number = null;
+      try {
+        number = Long.parseLong(numberInput);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException(
+            "Error: Invalid number format." + "\nPlease Enter only numbers!");
+      }
+
+      // Validate the range of the number
+      if (number < 1 || number > 999999999999L) {
+        throw new IllegalArgumentException(
+            "Error: Please enter a number between 1 and 999,999,999,999.");
+      }
+
       // Convert number to words
       String words = SayNumber.convertToWords(number);
       response.put("words", words);
