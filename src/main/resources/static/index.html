@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number to Words and Audio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Number to Words and Audio Converter</h2>
+        <form id="convertNumberForm">
+            <label for="numberInput"></label>
+            <input type="number" id="numberInput" name="number" required>
+            <button type="submit">Spell</button>
+        </form>
+        <div id="resultArea" style="margin-top: 20px;">
+            <p id="textResult"></p>
+            <audio id="audioPlayer" controls style="display: none;"></audio>
+            <a id="downloadLink" style="display: none;">Download Audio</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
