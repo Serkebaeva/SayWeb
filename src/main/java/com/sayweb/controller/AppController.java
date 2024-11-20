@@ -4,7 +4,6 @@ import com.sayweb.number.SayNumber;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.core.io.InputStreamResource;
@@ -20,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RestController
 public class AppController {
+
+  // Update audio directory path to the Docker container's static directory
+  private static final String AUDIO_DIR = "/app/static/audio";
 
   @GetMapping("/convert-to-words-and-audio")
   public ResponseEntity<Map<String, String>> convertToWordsAndAudio(
@@ -46,15 +48,19 @@ public class AppController {
       String words = SayNumber.convertToWords(number);
       response.put("words", words);
 
-      // Generate temporary audio file
-      File tempFile = Files.createTempFile("audio_", ".wav").toFile();
-      String[] command = {
-        "C:/Program Files/eSpeak NG/espeak-ng.exe", "-w", tempFile.getAbsolutePath(), words
-      };
+      // Ensure the audio directory exists inside the container
+      File audioDir = new File(AUDIO_DIR);
+      if (!audioDir.exists()) {
+        audioDir.mkdirs(); // Ensure the directory exists
+      }
+
+      // Generate temporary audio file in the static/audio directory
+      File tempFile = new File(audioDir, "audio_" + System.currentTimeMillis() + ".wav");
+      String[] command = {"espeak-ng", "-w", tempFile.getAbsolutePath(), words};
       Process process = Runtime.getRuntime().exec(command);
       process.waitFor(); // Wait for the audio file to be created
 
-      // Save temp file path for deletion
+      // Return the audio file URL to the client
       response.put("audioFileUrl", "/audio/" + tempFile.getName());
       return ResponseEntity.ok(response);
 
@@ -71,26 +77,36 @@ public class AppController {
   @GetMapping("/audio/{fileName}")
   public ResponseEntity<InputStreamResource> getAudioFile(@PathVariable String fileName) {
     try {
-      // Locate the temp file
-      File tempFile = new File(System.getProperty("java.io.tmpdir"), fileName);
-      if (!tempFile.exists()) {
+      // Use the dedicated audio directory in the container
+      File audioFile = new File(AUDIO_DIR, fileName);
+      if (!audioFile.exists()) {
         return ResponseEntity.notFound().build();
       }
 
       // Serve the file
-      InputStreamResource resource = new InputStreamResource(new FileInputStream(tempFile));
+      InputStreamResource resource = new InputStreamResource(new FileInputStream(audioFile));
       HttpHeaders headers = new HttpHeaders();
-      headers.add("Content-Disposition", "inline; filename=" + tempFile.getName());
+      headers.add("Content-Disposition", "inline; filename=" + audioFile.getName());
 
       ResponseEntity<InputStreamResource> response =
           ResponseEntity.ok()
               .headers(headers)
-              .contentLength(tempFile.length())
+              .contentLength(audioFile.length())
               .contentType(MediaType.APPLICATION_OCTET_STREAM)
               .body(resource);
 
-      // Delete the temp file after serving
-      tempFile.delete();
+      // Schedule the file for deletion after a longer delay
+      new Thread(
+              () -> {
+                try {
+                  // Wait for 5 minutes to ensure the download completes
+                  Thread.sleep(300000); // 300 seconds delay (5 minutes)
+                  audioFile.delete();
+                } catch (InterruptedException e) {
+                  e.printStackTrace();
+                }
+              })
+          .start();
 
       return response;
 

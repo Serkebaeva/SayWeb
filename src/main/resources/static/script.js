@@ -26,11 +26,13 @@ document.getElementById('convertNumberForm').onsubmit = async function (event) {
 
             // Set up the audio player
             const audioUrl = data.audioFileUrl;
-            audioPlayer.src = audioUrl;
+            const host = window.location.host;
+            audioPlayer.src = `http://${host}/audio/${audioUrl.split('/').pop()}`;
             audioPlayer.style.display = 'block';
 
             // Set up the download link
-            downloadLink.href = audioUrl;
+            downloadLink.href = `http://${host}/audio/${audioUrl.split('/').pop()}`;
+            downloadLink.download = `audio_${new Date().getTime()}.wav`;  // Optional filename
             downloadLink.innerText = 'Download Audio';
             downloadLink.style.display = 'block';
         } else {

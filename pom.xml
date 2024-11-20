@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sayweb</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>SayWeb</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SayWeb</name>
 	<description>SayWeb project for Spring Boot</description>

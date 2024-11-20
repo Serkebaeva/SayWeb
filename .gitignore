@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .gitattributes
+delete_unwanted_images.sh
+nano
 
 ### STS ###
 .apt_generated
