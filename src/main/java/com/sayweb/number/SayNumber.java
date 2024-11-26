@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SayNumber {
 
-  private static final String[] ones = {
+  private static final String[] ONES = {
     "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
   };
 
-  private static final String[] teens = {
+  private static final String[] TEENS = {
     "ten",
     "eleven",
     "twelve",
@@ -21,7 +21,8 @@ public class SayNumber {
     "eighteen",
     "nineteen"
   };
-  private static final String[] tens = {
+
+  private static final String[] TENS = {
     "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
   };
 
@@ -35,13 +36,13 @@ public class SayNumber {
     }
 
     if (num < 10) {
-      return ones[num.intValue()];
+      return ONES[num.intValue()];
     } else if (num < 20) {
-      return teens[num.intValue() - 10];
+      return TEENS[num.intValue() - 10];
     } else if (num < 100) {
-      return tens[num.intValue() / 10] + (num % 10 == 0 ? "" : " " + ones[num.intValue() % 10]);
+      return TENS[num.intValue() / 10] + (num % 10 == 0 ? "" : " " + ONES[num.intValue() % 10]);
     } else if (num < 1000) {
-      return ones[num.intValue() / 100]
+      return ONES[num.intValue() / 100]
           + " hundred"
           + (num % 100 == 0 ? "" : " " + convertToWords(num % 100));
     } else if (num < 1000000) {
