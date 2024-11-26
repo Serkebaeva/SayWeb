@@ -1,8 +1,5 @@
 package com.sayweb.number;
 
-import org.springframework.stereotype.Service;
-
-@Service
 public class SayNumber {
   private static final long MIN_NUMBER = 0; // below range starting from 0
   private static final long MAX_NUMBER = Long.MAX_VALUE; // upper range
@@ -27,6 +24,9 @@ public class SayNumber {
   private static final String[] TENS = {
     "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
   };
+
+  // Private constructor to prevent instantiation
+  private SayNumber() {}
 
   public static String convertToWords(Long num) {
     if (num == null) {
