@@ -16,10 +16,10 @@ h2 {
     color: black;
     margin-top: 15px;
     margin-bottom: 10px;
-    
+
 }
 
-form{
+form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -82,5 +82,3 @@ a {
 a:hover {
     text-decoration: underline;
 }
-
-
