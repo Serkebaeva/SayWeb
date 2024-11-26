@@ -19,9 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RestController
 public class AppController {
-
-  // Update audio directory path to the Docker container's static directory
-  private static final String AUDIO_DIR = "/app/static/audio";
+  private static final long MIN_NUMBER = 0; // below range starting from 0
+  private static final long MAX_NUMBER = Long.MAX_VALUE; // upper range
+  private static final String AUDIO_DIR =
+      "/app/static/audio"; // audio directory path to Docker container's static directory
 
   @GetMapping("/convert-to-words-and-audio")
   public ResponseEntity<Map<String, String>> convertToWordsAndAudio(
@@ -39,9 +40,9 @@ public class AppController {
       }
 
       // Validate the range of the number
-      if (number < 1 || number > 999999999999L) {
+      if (number < MIN_NUMBER || number > MAX_NUMBER) {
         throw new IllegalArgumentException(
-            "Error: Please enter a number between 1 and 999,999,999,999.");
+            "Error: Please enter a number between " + MIN_NUMBER + " and " + MAX_NUMBER + ".");
       }
 
       // Convert number to words
