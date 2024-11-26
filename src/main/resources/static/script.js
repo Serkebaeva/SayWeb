@@ -31,8 +31,8 @@ document.getElementById('convertNumberForm').onsubmit = async function (event) {
             audioPlayer.style.display = 'block';
             
             // Set up the download link
-            downloadLink.href = `http://${host}/audio/${audioUrl.split('/').pop()}`;
-            downloadLink.download = `audio_${new Date().getTime()}.wav`;  // Optional filename
+            downloadLink.href = audioUrl;
+            downloadLink.download = audioUrl.split('/').pop() ;
             downloadLink.innerText = 'Download Audio';
             downloadLink.style.display = 'block';
         } else {

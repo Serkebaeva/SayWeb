@@ -1,5 +1,8 @@
 package com.sayweb.number;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SayNumber {
   private static final long MIN_NUMBER = 0; // below range starting from 0
   private static final long MAX_NUMBER = Long.MAX_VALUE; // upper range
@@ -25,6 +28,9 @@ public class SayNumber {
     "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
   };
 
+  // Cache for word-to-number mapping to avoid regenerating
+  public static final Map<Long, String> NUMBER_TO_WORDS_CACHE = new HashMap<>();
+
   // Private constructor to prevent instantiation
   private SayNumber() {}
 
@@ -45,28 +51,48 @@ public class SayNumber {
               + ".");
     }
 
-    if (num < 10) {
-      return ONES[num.intValue()];
-    } else if (num < 20) {
-      return TEENS[num.intValue() - 10];
-    } else if (num < 100) {
-      return TENS[num.intValue() / 10] + (num % 10 == 0 ? "" : " " + ONES[num.intValue() % 10]);
-    } else if (num < 1000) {
-      return ONES[num.intValue() / 100]
-          + " hundred"
-          + (num % 100 == 0 ? "" : " " + convertToWords(num % 100));
-    } else if (num < 1000000) {
-      return convertToWords(num / 1000)
-          + " thousand"
-          + (num % 1000 == 0 ? "" : " " + convertToWords(num % 1000));
-    } else if (num < 1000000000) {
-      return convertToWords(num / 1000000)
-          + " million"
-          + (num % 1000000 == 0 ? "" : " " + convertToWords(num % 1000000));
-    } else {
-      return convertToWords(num / 1000000000)
-          + " billion"
-          + (num % 1000000000 == 0 ? "" : " " + convertToWords(num % 1000000000));
+    if (NUMBER_TO_WORDS_CACHE.containsKey(num)) {
+      return NUMBER_TO_WORDS_CACHE.get(num); // return cashed result
     }
+
+    String result = "";
+
+    if (num < 10) {
+      result = ONES[num.intValue()];
+    } else if (num < 20) {
+      result = TEENS[num.intValue() - 10];
+    } else if (num < 100) {
+      result = TENS[num.intValue() / 10] + (num % 10 == 0 ? "" : " " + ONES[num.intValue() % 10]);
+    } else if (num < 1000) {
+      result =
+          ONES[num.intValue() / 100]
+              + " hundred"
+              + (num % 100 == 0 ? "" : " " + convertToWords(num % 100));
+    } else if (num < 1000000) {
+      result =
+          convertToWords(num / 1000)
+              + " thousand"
+              + (num % 1000 == 0 ? "" : " " + convertToWords(num % 1000));
+    } else if (num < 1000000000) {
+      result =
+          convertToWords(num / 1000000)
+              + " million"
+              + (num % 1000000 == 0 ? "" : " " + convertToWords(num % 1000000));
+    } else {
+      result =
+          convertToWords(num / 1000000000)
+              + " billion"
+              + (num % 1000000000 == 0 ? "" : " " + convertToWords(num % 1000000000));
+    }
+
+    // Cashe the result for future use
+    NUMBER_TO_WORDS_CACHE.put(num, result);
+    return result;
+  }
+
+  // Generate the filename
+  public static String getFileNameForNumber(Long num) {
+    String words = convertToWords(num);
+    return words.hashCode() + ".wav"; // Generate filename based on hash
   }
 }
