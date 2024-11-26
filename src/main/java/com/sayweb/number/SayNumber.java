@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SayNumber {
+  private static final long MIN_NUMBER = 0; // below range starting from 0
+  private static final long MAX_NUMBER = Long.MAX_VALUE; // upper range
 
   private static final String[] ONES = {
     "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
@@ -30,9 +32,13 @@ public class SayNumber {
     if (num == null) {
       throw new IllegalArgumentException("Number cannot be null.");
     }
-    if (num < 1 || num > 999999999999L) {
+    if (num < MIN_NUMBER || num > MAX_NUMBER) {
       throw new IllegalArgumentException(
-          "Number out of range. Please enter a number between 1 and 999,999,999,999.");
+          "Number out of range. Please enter a number between "
+              + MIN_NUMBER
+              + " and "
+              + MAX_NUMBER
+              + ".");
     }
 
     if (num < 10) {
