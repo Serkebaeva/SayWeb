@@ -32,6 +32,10 @@ public class SayNumber {
     if (num == null) {
       throw new IllegalArgumentException("Number cannot be null.");
     }
+    if (num == MIN_NUMBER) {
+      return "zero";
+    }
+
     if (num < MIN_NUMBER || num > MAX_NUMBER) {
       throw new IllegalArgumentException(
           "Number out of range. Please enter a number between "

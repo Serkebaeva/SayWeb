@@ -82,3 +82,13 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+#audioPlayer {
+    display: none;
+    /*initially hide the audioplayer*/
+}
+
+#downloadLink {
+    display: none;
+    /*initially hide the link*/
+}
