@@ -114,11 +114,10 @@ public class AppController {
 
   private void cleanupOldFiles(File audioDir) {
     File[] files = audioDir.listFiles();
-    if (files != null) {
-      for (File file : files) {
-        if (file.isFile() && isOlderThanOneDay(file)) {
-          file.delete();
-        }
+    if (files == null) return;
+    for (File file : files) {
+      if (file.isFile() && isOlderThanOneDay(file)) {
+        file.delete();
       }
     }
   }
