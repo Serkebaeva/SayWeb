@@ -139,9 +139,10 @@ public class AppController {
       int hashCode = Integer.parseInt(hashStr);
 
       // Search for corresponding number based on hashCode (an imperfect workaround)
-      for (Map.Entry<Long, String> entry : SayNumber.NUMBER_TO_WORDS_CACHE.entrySet()) {
-        if (entry.getValue().hashCode() == hashCode) {
-          return entry.getKey(); // Return the number corresponding to the hash code
+      for (Long num : SayNumber.getAllCachedNumbers()) {
+        String cachedValue = SayNumber.getCachedValue(num);
+        if (cachedValue != null && cachedValue.hashCode() == hashCode) {
+          return num;
         }
       }
       throw new IllegalArgumentException(

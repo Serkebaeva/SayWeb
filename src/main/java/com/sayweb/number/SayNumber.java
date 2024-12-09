@@ -1,7 +1,10 @@
 package com.sayweb.number;
 
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class SayNumber {
   public static final long MIN_NUMBER = 0; // The below range starting from 0
@@ -28,8 +31,17 @@ public class SayNumber {
     "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
   };
 
-  // Cache for word-to-number mapping to avoid regenerating
-  public static final Map<Long, String> NUMBER_TO_WORDS_CACHE = new HashMap<>();
+  // Cache with a maximum size of 1000
+  private static final int CACHE_MAX_SIZE = 1000;
+  private static final Map<Long, String> NUMBER_TO_WORDS_CACHE =
+      Collections.synchronizedMap(
+          new LinkedHashMap<Long, String>(CACHE_MAX_SIZE, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Long, String> eldest) {
+              return size()
+                  > CACHE_MAX_SIZE; // Remove the eldest entry if the cache exceeds the maximum size
+            }
+          });
 
   // Private constructor to prevent instantiation
   private SayNumber() {}
@@ -51,8 +63,11 @@ public class SayNumber {
               + ".");
     }
 
-    if (NUMBER_TO_WORDS_CACHE.containsKey(num)) {
-      return NUMBER_TO_WORDS_CACHE.get(num); // Return the cashed result
+    // Check if the number is already cached
+    synchronized (NUMBER_TO_WORDS_CACHE) {
+      if (NUMBER_TO_WORDS_CACHE.containsKey(num)) {
+        return NUMBER_TO_WORDS_CACHE.get(num); // Return the cashed result
+      }
     }
 
     String result = "";
@@ -85,8 +100,10 @@ public class SayNumber {
               + (num % 1000000000 == 0 ? "" : " " + convertToWords(num % 1000000000));
     }
 
-    // Cashe the result for future use
-    NUMBER_TO_WORDS_CACHE.put(num, result);
+    // Cashe the result
+    synchronized (NUMBER_TO_WORDS_CACHE) {
+      NUMBER_TO_WORDS_CACHE.put(num, result);
+    }
     return result;
   }
 
@@ -94,5 +111,19 @@ public class SayNumber {
   public static String getFileNameForNumber(Long num) {
     String words = convertToWords(num);
     return words.hashCode() + ".wav"; // Generate the filename based on hash
+  }
+
+  // Method to retrieve a cached value
+  public static String getCachedValue(Long num) {
+    return NUMBER_TO_WORDS_CACHE.get(num); // Return the cached value
+  }
+
+  // Method to check if value is cached
+  public static boolean isCached(Long num) {
+    return NUMBER_TO_WORDS_CACHE.containsKey(num); // Return true if value is cached
+  }
+
+  public static synchronized Set<Long> getAllCachedNumbers() {
+    return new HashSet<>(NUMBER_TO_WORDS_CACHE.keySet());
   }
 }
