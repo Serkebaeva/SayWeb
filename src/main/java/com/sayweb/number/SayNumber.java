@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SayNumber {
-  private static final long MIN_NUMBER = 0; // below range starting from 0
-  private static final long MAX_NUMBER = Long.MAX_VALUE; // upper range
+  private static final long MIN_NUMBER = 0; // The below range starting from 0
+  private static final long MAX_NUMBER = Long.MAX_VALUE; // The upper range numbers
 
   private static final String[] ONES = {
     "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
@@ -52,7 +52,7 @@ public class SayNumber {
     }
 
     if (NUMBER_TO_WORDS_CACHE.containsKey(num)) {
-      return NUMBER_TO_WORDS_CACHE.get(num); // return cashed result
+      return NUMBER_TO_WORDS_CACHE.get(num); // Return the cashed result
     }
 
     String result = "";
@@ -93,6 +93,6 @@ public class SayNumber {
   // Generate the filename
   public static String getFileNameForNumber(Long num) {
     String words = convertToWords(num);
-    return words.hashCode() + ".wav"; // Generate filename based on hash
+    return words.hashCode() + ".wav"; // Generate the filename based on hash
   }
 }

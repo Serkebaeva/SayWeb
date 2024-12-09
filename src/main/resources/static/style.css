@@ -99,10 +99,10 @@ a:hover {
 
 #audioPlayer {
     display: none;
-    /*initially hide the audioplayer*/
+    /* Initially hide the audioplayer*/
 }
 
 #downloadLink {
     display: none;
-    /*initially hide the link*/
+    /* Initially hide the link*/
 }

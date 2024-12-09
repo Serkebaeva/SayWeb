@@ -23,7 +23,7 @@ document.getElementById('convertNumberForm').onsubmit = async function (event) {
         if (response.ok) {
             textResult.innerText = data.words;
             textResult.style.color = 'black';
-            // Make visible Generate audio button
+            // Make visible the Generate audio button
             audioButton.style.display = 'inline-block'; 
         } else {
             textResult.innerText = data.error;
@@ -36,7 +36,7 @@ document.getElementById('convertNumberForm').onsubmit = async function (event) {
     }
 };
 
-// Get Audio File button event
+// Get an Audio File button event
 document.getElementById('audioButton').onclick = async function (event) {
     event.preventDefault();
     

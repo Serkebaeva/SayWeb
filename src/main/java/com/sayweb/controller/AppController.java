@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RestController
 public class AppController {
-  private static final long MIN_NUMBER = 0; // below range starting from 0
-  private static final long MAX_NUMBER = Long.MAX_VALUE; // upper range
+  private static final long MIN_NUMBER = 0; // The below range starting from 0
+  private static final long MAX_NUMBER = Long.MAX_VALUE; // The upper range numbers
   private static final String AUDIO_DIR =
-      "/app/static/audio"; // audio directory path to Docker container's static directory
+      "/app/static/audio"; // An audio directory path to Docker container's static directory
 
   @GetMapping("/convert-to-words-and-audio")
   public ResponseEntity<Map<String, String>> convertToWordsAndAudio(
@@ -46,11 +46,11 @@ public class AppController {
             "Error: Please enter a number between " + MIN_NUMBER + " and " + MAX_NUMBER + ".");
       }
 
-      // Convert number to words
+      // Convert a number to words
       String words = SayNumber.convertToWords(number);
       response.put("words", words);
 
-      // Generate predictable filename
+      // Generate a predictable filename
       String fileName = SayNumber.getFileNameForNumber(number);
       response.put("audioFileUrl", "/audio/" + fileName);
 
@@ -77,16 +77,16 @@ public class AppController {
       // Check and cleanup old files
       cleanupOldFiles(audioDir);
 
-      // Generate file path
+      // Generate a file path
       File audioFile = new File(audioDir, fileName);
       if (!audioFile.exists()) {
-        // Extract number from file name if possible
+        // Extract a number from file name if possible
         Long number = extractNumberFromFileName(fileName);
 
         // Convert the number to words
         String words = SayNumber.convertToWords(number);
 
-        // Generate audiofile
+        // Generate an audiofile
         String[] command = {"espeak-ng", "-w", audioFile.getAbsolutePath(), words};
         Process process = Runtime.getRuntime().exec(command);
         process.waitFor(); // Wait for the audio file to be created
@@ -124,7 +124,7 @@ public class AppController {
   }
 
   private boolean isOlderThanOneDay(File file) {
-    long oneDayMillis = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+    long oneDayMillis = 24 * 60 * 60 * 1000; // 1 Day in milliseconds
     return (new Date().getTime() - file.lastModified()) > oneDayMillis;
   }
 
