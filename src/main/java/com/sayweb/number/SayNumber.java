@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SayNumber {
-  private static final long MIN_NUMBER = 0; // The below range starting from 0
-  private static final long MAX_NUMBER = Long.MAX_VALUE; // The upper range numbers
+  public static final long MIN_NUMBER = 0; // The below range starting from 0
+  public static final long MAX_NUMBER = Long.MAX_VALUE; // The upper range numbers
 
   private static final String[] ONES = {
     "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"

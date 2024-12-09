@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RestController
 public class AppController {
-  private static final long MIN_NUMBER = 0; // The below range starting from 0
-  private static final long MAX_NUMBER = Long.MAX_VALUE; // The upper range numbers
+
   private static final String AUDIO_DIR =
       "/app/static/audio"; // An audio directory path to Docker container's static directory
 
@@ -40,10 +39,14 @@ public class AppController {
             "Error: Invalid number format." + "\nPlease Enter only numbers!");
       }
 
-      // Validate the range of the number
-      if (number < MIN_NUMBER || number > MAX_NUMBER) {
+      // Validate the range of the number using SayNumber constants
+      if (number < SayNumber.MIN_NUMBER || number > SayNumber.MAX_NUMBER) {
         throw new IllegalArgumentException(
-            "Error: Please enter a number between " + MIN_NUMBER + " and " + MAX_NUMBER + ".");
+            "Error: Please enter a number between "
+                + SayNumber.MIN_NUMBER
+                + " and "
+                + SayNumber.MAX_NUMBER
+                + ".");
       }
 
       // Convert a number to words
