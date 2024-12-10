@@ -1,19 +1,19 @@
-**Instructions**
+**Instructions**<br>
 Given a number from 0 to 999,999,999,999, spell out that number in English.
 
-#Step 1
+# **Step 1**<br>
 Handle the basic case of 0 through 99.
 If the input to the program is 22, then the output should be 'twenty-two'.
 Your program should complain loudly if given a number outside the blessed range. 
 
-#Step 2
+# **Step 2**<br>
 Implement breaking up a number into chunks of thousands... Then handle inserting the appropriate scale word between those chunks.
 So 1234567890 should yield '1 billion 234 million 567 thousand 890'
 
-#Step 3
+# **Step 3**<br>
 Put it all together to get nothing but plain English. 12345 should give twelve thousand three hundred forty-five.
 
-#Step 4
+# **Step 4**<br>
 Write your project using Spring Boot as a web application and deployed to a cloud. On AWS, the web app should be accessible via a public URL from anywhere. 
 
 ```The web app has a single page with the form, which contains an input field, a button and a result text area (a div or a span).
