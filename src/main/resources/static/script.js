@@ -23,6 +23,7 @@ document.getElementById('convertNumberForm').onsubmit = async function (event) {
         if (response.ok) {
             textResult.innerText = data.words;
             textResult.style.color = 'black';
+            
             // Make visible the Generate audio button
             audioButton.style.display = 'inline-block'; 
         } else {

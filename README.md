@@ -1,4 +1,4 @@
-**Instructions**<br>
+# **About**<br>
 Given a number from 0 to 999,999,999,999, spell out that number in English.
 
 # **Step 1**<br>
@@ -28,16 +28,21 @@ Validations:
 Check if a given number is valid (is a number) and within an acceptable range. Otherwise, show an error in the result area. This validation should be done on the server side (not on frontend or JavaScript).
 ```
 
-Source
-https://exercism.org/tracks/java/exercises/say
+# **Used Technologies**<br>
+Java: Version 17
+Spring Boot: Version 3.3.5
+Maven: Version 4.0.0
+Docker: Using openjdk:17-jdk-slim image
+Espeak-ng: Installed via APT/ 1.52-dev
+AWS: Ubuntu 24.04.1 LTS (Noble Numbat)
+
+### Source of task<br>
+[Exercism Java Exercise](https://exercism.org/tracks/java/exercises/say)
 
 ## Demo Screenshots
-![Screenshot 4](./static/images/Screenshot_docker.png)
-![Screenshot 4](./static/images/Screenshot_server.png)
-![Screenshot 1](./static/images/Screenshot1.png)
-![Screenshot 2](./static/images/Screenshot2.png)
-![Screenshot 3](./static/images/Screenshot3.png)
-![Screenshot 5](./static/images/Screenshot5.png)
-
-
+![Screenshot Server](./static/images/server.png)
+![Screenshot A Big Number Converted](./static/images/lastConvertedNum.png)
+![Screenshot Another Converted Number](./static/images/convertedNum.png)
+![Screenshot Negative Number Error](./static/images/negativeNumError.png)
+![Screenshot Enter Only Numbers Error](./static/images/onlyNumError.png)
 

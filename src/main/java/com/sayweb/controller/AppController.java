@@ -71,8 +71,10 @@ public class AppController {
   @GetMapping("/audio/{fileName}")
   public ResponseEntity<InputStreamResource> getAudioFile(@PathVariable String fileName) {
     try {
+
       // Ensure the directory exists
       File audioDir = new File(AUDIO_DIR);
+
       if (!audioDir.exists()) {
         audioDir.mkdirs();
       }
@@ -82,7 +84,9 @@ public class AppController {
 
       // Generate a file path
       File audioFile = new File(audioDir, fileName);
+
       if (!audioFile.exists()) {
+
         // Extract a number from file name if possible
         Long number = extractNumberFromFileName(fileName);
 
@@ -117,7 +121,9 @@ public class AppController {
 
   private void cleanupOldFiles(File audioDir) {
     File[] files = audioDir.listFiles();
+
     if (files == null) return;
+
     for (File file : files) {
       if (file.isFile() && isOlderThanOneDay(file)) {
         file.delete();
@@ -141,6 +147,7 @@ public class AppController {
       // Search for corresponding number based on hashCode (an imperfect workaround)
       for (Long num : SayNumber.getAllCachedNumbers()) {
         String cachedValue = SayNumber.getCachedValue(num);
+
         if (cachedValue != null && cachedValue.hashCode() == hashCode) {
           return num;
         }

@@ -8,16 +8,20 @@
 </head>
 <body>
     <div class="container">
+
         <h2>Number to Words and Audio Converter</h2>
+
         <form id="convertNumberForm">
             <label for="numberInput"></label>
             <input type="text" id="numberInput" name="number" required>
             <button type="submit">Spell</button>
         </form>
+
         <div id="resultArea">
             <p id="textResult"></p>
             <button type="getAudioFile" id="audioButton">Get audio file</button>
-        </div>        
+        </div>  
+
         <div id="audioResult">            
             <audio id="audioPlayer" controls></audio>
             <a id="downloadLink">Download Audio</a>
@@ -25,5 +29,6 @@
     </div>
     
     <script src="script.js"></script>
+    
 </body>
 </html>

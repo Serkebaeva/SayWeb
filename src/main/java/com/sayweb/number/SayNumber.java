@@ -33,6 +33,7 @@ public class SayNumber {
 
   // Cache with a maximum size of 1000
   private static final int CACHE_MAX_SIZE = 1000;
+
   private static final Map<Long, String> NUMBER_TO_WORDS_CACHE =
       Collections.synchronizedMap(
           new LinkedHashMap<Long, String>(CACHE_MAX_SIZE, 0.75f, true) {
@@ -47,9 +48,11 @@ public class SayNumber {
   private SayNumber() {}
 
   public static String convertToWords(Long num) {
+
     if (num == null) {
       throw new IllegalArgumentException("Number cannot be null.");
     }
+
     if (num == MIN_NUMBER) {
       return "zero";
     }
