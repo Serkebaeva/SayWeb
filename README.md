@@ -20,18 +20,18 @@ Write your project using Spring Boot as a web application and deployed to a clou
 The web app has a single page with the form, which contains an input field,
 a button and a result text area (a div or a span).
 
-`The workflow is the following:`
+`The workflow is the following`:
 A user enters a number into to the input field.
 A user clicks the button.
 The form sends a request to the server to convert a given number to words.
 The form gets a response from the server and shows a result in the result area.
 
-`Validations:`
+`Validations`:
 Check if a given number is valid (is a number) and within an acceptable range. 
 Otherwise, show an error in the result area. 
 This validation should be done on the server side (not on frontend or JavaScript).
 ```
-### Source of task [Exercism Java Exercise](https://exercism.org/tracks/java/exercises/say)
+### Source of task: [Exercism Java Exercise](https://exercism.org/tracks/java/exercises/say)
 
 ## **Used Technologies**<br>
 - Java: **Version 17**<br>
