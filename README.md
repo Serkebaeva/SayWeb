@@ -39,7 +39,7 @@ This validation should be done on the server side (not on frontend or JavaScript
 - Maven: **Version 4.0.0**<br>
 - Docker: **openjdk:17-jdk-slim image**<br>
 - Espeak-ng: **1.52-dev**<br>
-- AWS: **Ubuntu 24.04.1 LTS (Noble Numbat)**<br>
+- AWS EC2 instance: **Ubuntu 24.04.1 LTS (Noble Numbat)**<br>
 
 ## Demo Screenshots
 ![Screenshot Server](./static/images/server.png)
