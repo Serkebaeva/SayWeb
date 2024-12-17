@@ -4,6 +4,7 @@ import com.sayweb.number.SayNumber;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.core.io.InputStreamResource;
@@ -20,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AppController {
 
-  // Update audio directory path to the Docker container's static directory
-  private static final String AUDIO_DIR = "/app/static/audio";
+  private static final String AUDIO_DIR =
+      "/app/static/audio"; // An audio directory path to Docker container's static directory
 
   @GetMapping("/convert-to-words-and-audio")
   public ResponseEntity<Map<String, String>> convertToWordsAndAudio(
@@ -38,49 +39,69 @@ public class AppController {
             "Error: Invalid number format." + "\nPlease Enter only numbers!");
       }
 
-      // Validate the range of the number
-      if (number < 1 || number > 999999999999L) {
+      // Validate the range of the number using SayNumber constants
+      if (number < SayNumber.MIN_NUMBER || number > SayNumber.MAX_NUMBER) {
         throw new IllegalArgumentException(
-            "Error: Please enter a number between 1 and 999,999,999,999.");
+            "Error: Please enter a number between "
+                + SayNumber.MIN_NUMBER
+                + " and "
+                + SayNumber.MAX_NUMBER
+                + ".");
       }
 
-      // Convert number to words
+      // Convert a number to words
       String words = SayNumber.convertToWords(number);
       response.put("words", words);
 
-      // Ensure the audio directory exists inside the container
-      File audioDir = new File(AUDIO_DIR);
-      if (!audioDir.exists()) {
-        audioDir.mkdirs(); // Ensure the directory exists
-      }
+      // Generate a predictable filename
+      String fileName = SayNumber.getFileNameForNumber(number);
+      response.put("audioFileUrl", "/audio/" + fileName);
 
-      // Generate temporary audio file in the static/audio directory
-      File tempFile = new File(audioDir, "audio_" + System.currentTimeMillis() + ".wav");
-      String[] command = {"espeak-ng", "-w", tempFile.getAbsolutePath(), words};
-      Process process = Runtime.getRuntime().exec(command);
-      process.waitFor(); // Wait for the audio file to be created
-
-      // Return the audio file URL to the client
-      response.put("audioFileUrl", "/audio/" + tempFile.getName());
       return ResponseEntity.ok(response);
-
-    } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
-      response.put("error", "An error occurred while generating the audio.");
-      return ResponseEntity.status(500).body(response);
     } catch (IllegalArgumentException e) {
       response.put("error", e.getMessage());
       return ResponseEntity.badRequest().body(response);
+    } catch (Exception e) {
+      e.printStackTrace();
+      response.put("error", "An unexpected error occurred.");
+      return ResponseEntity.status(500).body(response);
     }
   }
 
   @GetMapping("/audio/{fileName}")
   public ResponseEntity<InputStreamResource> getAudioFile(@PathVariable String fileName) {
     try {
-      // Use the dedicated audio directory in the container
-      File audioFile = new File(AUDIO_DIR, fileName);
+
+      // Ensure the directory exists
+      File audioDir = new File(AUDIO_DIR);
+
+      if (!audioDir.exists()) {
+        audioDir.mkdirs();
+      }
+
+      // Check and cleanup old files
+      cleanupOldFiles(audioDir);
+
+      // Generate a file path
+      File audioFile = new File(audioDir, fileName);
+
       if (!audioFile.exists()) {
-        return ResponseEntity.notFound().build();
+
+        // Extract a number from file name if possible
+        Long number = extractNumberFromFileName(fileName);
+
+        // Convert the number to words
+        String words = SayNumber.convertToWords(number);
+
+        // Generate an audiofile
+        String[] command = {"espeak-ng", "-w", audioFile.getAbsolutePath(), words};
+        Process process = Runtime.getRuntime().exec(command);
+        process.waitFor(); // Wait for the audio file to be created
+      }
+
+      // Verify the file exists after attempting to create it
+      if (!audioFile.exists()) {
+        throw new IOException("Failed to generate the audio file.");
       }
 
       // Serve the file
@@ -88,30 +109,54 @@ public class AppController {
       HttpHeaders headers = new HttpHeaders();
       headers.add("Content-Disposition", "inline; filename=" + audioFile.getName());
 
-      ResponseEntity<InputStreamResource> response =
-          ResponseEntity.ok()
-              .headers(headers)
-              .contentLength(audioFile.length())
-              .contentType(MediaType.APPLICATION_OCTET_STREAM)
-              .body(resource);
+      return ResponseEntity.ok()
+          .headers(headers)
+          .contentLength(audioFile.length())
+          .contentType(MediaType.APPLICATION_OCTET_STREAM)
+          .body(resource);
+    } catch (IOException | InterruptedException e) {
+      return ResponseEntity.status(500).body(null);
+    }
+  }
 
-      // Schedule the file for deletion after a longer delay
-      new Thread(
-              () -> {
-                try {
-                  // Wait for 5 minutes to ensure the download completes
-                  Thread.sleep(300000); // 300 seconds delay (5 minutes)
-                  audioFile.delete();
-                } catch (InterruptedException e) {
-                  e.printStackTrace();
-                }
-              })
-          .start();
+  private void cleanupOldFiles(File audioDir) {
+    File[] files = audioDir.listFiles();
 
-      return response;
+    if (files == null) return;
 
-    } catch (IOException e) {
-      return ResponseEntity.notFound().build();
+    for (File file : files) {
+      if (file.isFile() && isOlderThanOneDay(file)) {
+        file.delete();
+      }
+    }
+  }
+
+  private boolean isOlderThanOneDay(File file) {
+    long oneDayMillis = 24 * 60 * 60 * 1000; // 1 Day in milliseconds
+    return (new Date().getTime() - file.lastModified()) > oneDayMillis;
+  }
+
+  private Long extractNumberFromFileName(String fileName) {
+    try {
+      // Convert hashCode back to the number, by reversing the process.
+      // We don't really reverse hashCode (it’s not a reversible operation), so for now, we'll
+      // assume that the number generating this filename is unique and identifiable.
+      String hashStr = fileName.replace(".wav", "");
+      int hashCode = Integer.parseInt(hashStr);
+
+      // Search for corresponding number based on hashCode (an imperfect workaround)
+      for (Long num : SayNumber.getAllCachedNumbers()) {
+        String cachedValue = SayNumber.getCachedValue(num);
+
+        if (cachedValue != null && cachedValue.hashCode() == hashCode) {
+          return num;
+        }
+      }
+      throw new IllegalArgumentException(
+          "Invalid file name format or hash code mismatch: " + fileName);
+
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Invalid file name format: " + fileName);
     }
   }
 }
